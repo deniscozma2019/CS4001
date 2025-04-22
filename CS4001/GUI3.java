@@ -4,26 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public  class GUI3 implements ActionListener {
-    private final JTextField vacancyNumberField;
-    private final JTextField designationField;
-    private final JTextField jobTypeField;
-    private final JTextField staffNameField;
-    private final JTextField joiningDateField;
-    private final JTextField qualificationField;
-    private final JTextField appointedByField;
-    private final JTextField salaryField;
-    private final JTextField weeklyFractionalHoursField;
-    private final JTextField wagesPerHourField;
-    private final JTextField shiftsField;
-    private final JTextField workingHourField;
-    private final JTextField terminatedField;
+public class GUI3 implements ActionListener {
+    private final JTextField vacancyNumberField, designationField, jobTypeField, staffNameField, joiningDateField;
+    private final JTextField qualificationField, appointedByField, salaryField, weeklyFractionalHoursField;
+    private final JTextField wagesPerHourField, shiftsField, workingHourField, terminatedField, displayNumberField;
     private final JCheckBox joinedCheckBox;
-    private final JTextField displayNumberField;
-    private JButton addFullTimeButton, addWorkingHoursButton, addWeeklyFractionalHoursButton, setWagesPerHourButton, addPartTimeButton, setSalaryButton, setShiftsButton, terminateButton, displayButton, clearButton;
     private final JFrame frame;
 
-    ArrayList <StaffHire> Item = new ArrayList<StaffHire>();
+    private final JButton setSalaryButton, addWeeklyHoursButton, addFullTimeStaffButton;
+    private final JButton addWorkingHoursButton, setWagesPerHourButton, setShiftsButton;
+    private final JButton terminateButton, addPartTimeStaffButton, displayButton, clearButton;
+
+    private final ArrayList<StaffHire> staffList = new ArrayList<>();
+
     public GUI3() {
         frame = new JFrame("Staff Hiring System");
         Container contentPane = frame.getContentPane();
@@ -31,11 +24,9 @@ public  class GUI3 implements ActionListener {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(20, 5, 20, 20);
 
-        // Panel for the first column (General Staff Information)
+        // General Staff Information Panel
         JPanel leftPanel = new JPanel(new GridLayout(8, 2, 10, 10));
-
         leftPanel.setBorder(BorderFactory.createTitledBorder("General Staff Information"));
-        contentPane.add(leftPanel,gbc);
 
         leftPanel.add(new JLabel("Vacancy Number:"));
         vacancyNumberField = new JTextField(15);
@@ -65,24 +56,22 @@ public  class GUI3 implements ActionListener {
         appointedByField = new JTextField(15);
         leftPanel.add(appointedByField);
 
-        leftPanel.add(new JLabel("Joined Date:"));
+        leftPanel.add(new JLabel("Joined:"));
         joinedCheckBox = new JCheckBox();
         leftPanel.add(joinedCheckBox);
 
-        // Building the Panels No2
+        // Right Panel for Employment Details
         JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setBorder(BorderFactory.createTitledBorder("Employment Details"));
-
         GridBagConstraints gbd = new GridBagConstraints();
         gbd.insets = new Insets(5, 3, 5, 5);
         gbd.fill = GridBagConstraints.HORIZONTAL;
 
-        // Full-Time Panel
+        // Full-Time Employment Details
         JPanel fullTimePanel = new JPanel(new GridBagLayout());
         fullTimePanel.setBorder(BorderFactory.createTitledBorder("Full Time Employment Details"));
 
-        gbd.gridx = 0;
-        gbd.gridy = 0;
+        gbd.gridx = 0; gbd.gridy = 0;
         fullTimePanel.add(new JLabel("Salary:"), gbd);
 
         gbd.gridx = 1;
@@ -90,11 +79,11 @@ public  class GUI3 implements ActionListener {
         fullTimePanel.add(salaryField, gbd);
 
         gbd.gridx = 2;
-        JButton setSalaryButton = new JButton("Set Salary");
+        setSalaryButton = new JButton("Set Salary");
+        setSalaryButton.addActionListener(this);
         fullTimePanel.add(setSalaryButton, gbd);
 
-        gbd.gridx = 0;
-        gbd.gridy = 1;
+        gbd.gridx = 0; gbd.gridy = 1;
         fullTimePanel.add(new JLabel("Weekly Fractional Hours:"), gbd);
 
         gbd.gridx = 1;
@@ -102,25 +91,23 @@ public  class GUI3 implements ActionListener {
         fullTimePanel.add(weeklyFractionalHoursField, gbd);
 
         gbd.gridx = 2;
-        JButton addWeeklyHoursButton = new JButton("Set Weekly Fractional Hours");
+        addWeeklyHoursButton = new JButton("Set Weekly Fractional Hours");
+        addWeeklyHoursButton.addActionListener(this);
         fullTimePanel.add(addWeeklyHoursButton, gbd);
 
-        gbd.gridx = 0;
-        gbd.gridy = 3;
-        gbd.gridwidth = 3;
-        JButton addFullTimeStaffButton = new JButton("Add Full Time Staff");
+        gbd.gridx = 0; gbd.gridy = 3; gbd.gridwidth = 3;
+        addFullTimeStaffButton = new JButton("Add Full Time Staff");
+        addFullTimeStaffButton.addActionListener(this);
         fullTimePanel.add(addFullTimeStaffButton, gbd);
 
-        // Part-Time Panel
+        // Part-Time Employment Details
         JPanel partTimePanel = new JPanel(new GridBagLayout());
         partTimePanel.setBorder(BorderFactory.createTitledBorder("Part Time Employment Details"));
-
         GridBagConstraints gbs = new GridBagConstraints();
         gbs.insets = new Insets(5, 3, 5, 5);
         gbs.fill = GridBagConstraints.HORIZONTAL;
 
-        gbs.gridx = 0;
-        gbs.gridy = 0;
+        gbs.gridx = 0; gbs.gridy = 0;
         partTimePanel.add(new JLabel("Working Hour:"), gbs);
 
         gbs.gridx = 1;
@@ -128,11 +115,11 @@ public  class GUI3 implements ActionListener {
         partTimePanel.add(workingHourField, gbs);
 
         gbs.gridx = 2;
-        JButton addWorkingHoursButton = new JButton("Number of Working Hours:");
+        addWorkingHoursButton = new JButton("Number of Working Hours:");
+        addWorkingHoursButton.addActionListener(this);
         partTimePanel.add(addWorkingHoursButton, gbs);
 
-        gbs.gridx = 0;
-        gbs.gridy = 1;
+        gbs.gridx = 0; gbs.gridy = 1;
         partTimePanel.add(new JLabel("Wage Per Hour:"), gbs);
 
         gbs.gridx = 1;
@@ -140,11 +127,11 @@ public  class GUI3 implements ActionListener {
         partTimePanel.add(wagesPerHourField, gbs);
 
         gbs.gridx = 2;
-        JButton setWagesPerHourButton = new JButton("Wages Per Hour:");
+        setWagesPerHourButton = new JButton("Wages Per Hour:");
+        setWagesPerHourButton.addActionListener(this);
         partTimePanel.add(setWagesPerHourButton, gbs);
 
-        gbs.gridx = 0;
-        gbs.gridy = 2;
+        gbs.gridx = 0; gbs.gridy = 2;
         partTimePanel.add(new JLabel("Shifts:"), gbs);
 
         gbs.gridx = 1;
@@ -152,11 +139,11 @@ public  class GUI3 implements ActionListener {
         partTimePanel.add(shiftsField, gbs);
 
         gbs.gridx = 2;
-        JButton setShiftsButton = new JButton("Set Shifts");
+        setShiftsButton = new JButton("Set Shifts");
+        setShiftsButton.addActionListener(this);
         partTimePanel.add(setShiftsButton, gbs);
 
-        gbs.gridx = 0;
-        gbs.gridy = 3;
+        gbs.gridx = 0; gbs.gridy = 3;
         partTimePanel.add(new JLabel("Terminated Number:"), gbs);
 
         gbs.gridx = 1;
@@ -164,53 +151,42 @@ public  class GUI3 implements ActionListener {
         partTimePanel.add(terminatedField, gbs);
 
         gbs.gridx = 2;
-        JButton terminateButton = new JButton("Terminate Staff");
+        terminateButton = new JButton("Terminate Staff");
+        terminateButton.addActionListener(this);
         partTimePanel.add(terminateButton, gbs);
 
-        gbs.gridx = 0;
-        gbs.gridy = 4;
-        gbs.gridwidth = 3;
-        JButton addPartTimeStaffButton = new JButton(" Add Part Time Staff");
+        gbs.gridx = 0; gbs.gridy = 4; gbs.gridwidth = 3;
+        addPartTimeStaffButton = new JButton("Add Part Time Staff");
+        addPartTimeStaffButton.addActionListener(this);
         partTimePanel.add(addPartTimeStaffButton, gbs);
 
-        //Adding Panels to Right Panel
-        gbd.gridx = 0;
-        gbd.gridy = 0;
-        gbd.gridwidth = 3;
+        // Add Panels to Right Side
+        gbd.gridx = 0; gbd.gridy = 0; gbd.gridwidth = 3;
         rightPanel.add(fullTimePanel, gbd);
+        gbd.gridy = 1;
+        rightPanel.add(partTimePanel, gbd);
 
-        gbs.gridy = 1;
-        gbs.gridwidth = 3;
-        rightPanel.add(partTimePanel, gbs);
-
-        // Panel for buttons
+        // Button Panel
         JPanel buttonPanel = new JPanel(new FlowLayout());
-
         displayNumberField = new JTextField(15);
         buttonPanel.add(displayNumberField);
 
         displayButton = new JButton("Display Details of Staff");
-        buttonPanel.add(displayButton);
         displayButton.addActionListener(this);
+        buttonPanel.add(displayButton);
 
         clearButton = new JButton("Clear Detail from the Windows");
-        buttonPanel.add(clearButton);
         clearButton.addActionListener(this);
+        buttonPanel.add(clearButton);
 
-        // Layout setup
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-
+        // Add to Content Pane
+        gbc.gridx = 0; gbc.gridy = 0;
         contentPane.add(leftPanel, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 0;
-
         contentPane.add(rightPanel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2;
         contentPane.add(buttonPanel, gbc);
 
         frame.pack();
@@ -218,169 +194,47 @@ public  class GUI3 implements ActionListener {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args)
-    {
-        new GUI3();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(GUI3::new);
     }
 
-    public void actionPerformed(ActionEvent event)
-    {
+    @Override
+    public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
-        if (command.equals("Clear Detail from the Windows")) {
-            clearFields();
+        switch (command) {
+            case "Clear Detail from the Windows":
+                clearFields();
+                break;
+            case "Set Salary":
+                setSalary();
+                break;
+            case "Set Weekly Fractional Hours":
+                setWeeklyHours();
+                break;
+            case "Add Full Time Staff":
+                addFullTimeStaff();
+                break;
+            case "Number of Working Hours:":
+                setWorkingHours();
+                break;
+            case "Wages Per Hour:":
+                setWagesPerHour();
+                break;
+            case "Set Shifts":
+                setShifts();
+                break;
+            case "Terminate Staff":
+                terminatePartTimeStaff();
+                break;
+            case "Add Part Time Staff":
+                addPartTimeStaff();
+                break;
+            case "Display Details of Staff":
+                displayStaffDetails();
+                break;
+            default:
+                break;
         }
-
-        if (command.equals("Set Salary")) {
-            setSalary();
-        }
-
-         if (command.equals("Set Weekly Fractional Hours")) {
-         setWeeklyHours();
-         }
-
-         if (command.equals("Full Time Staff")) {
-         addFullTimeStaff();
-         }
-
-         if (command.equals("Number of Working Hours:")) {
-         setWorkingHours();
-         }
-
-         if (command.equals("Wages Per Hour:")) {
-         setWagesPerHour();
-         }
-
-         if (command.equals("Set Shifts")) {
-             try {
-                 String shiftsText = shiftsField.getText();
-                 int shifts = Integer.parseInt(shiftsText);
-                 System.out.println("Shifts set to: " + shifts);
-             } catch (NumberFormatException e) {
-                 System.out.println("Invalid input! Please enter a valid number for shifts.");
-                 JOptionPane.showMessageDialog(null, "Please enter a valid number for shifts.", "Input Error", JOptionPane.ERROR_MESSAGE);
-             }
-         }
-
-        if (command.equals("Terminate Part time Staff"))
-        {
-            terminatePartTimeStaff();
-        }
-
-        if (command.equals("Display Number"))
-        {
-            getDisplayNumber();
-        }
-    }
-
-    private void setWorkingHours() {
-
-    }
-
-    private void addFullTimeStaff() {
-
-    }
-
-    public String getDesignation()
-    {
-        String aDesignation = null;
-        try {
-            if (designationField.getText().isEmpty()) {
-                throw new Exception();
-            }
-            aDesignation = designationField.getText();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame, "Designation is not entered");
-        }
-
-        return aDesignation;
-    }
-
-    public int getDisplayNumber() {
-        int getDisplayNumber = -1;
-        try {
-            getDisplayNumber = Integer.parseInt(displayNumberField.getText());
-        }
-        catch(NumberFormatException exception) {
-            JOptionPane.showMessageDialog(frame, "Number Format Exception.");
-        }
-        return getDisplayNumber;
-    }
-
-    public void setSalary()
-    {
-        try {
-            String salaryText = salaryField.getText();
-            double salary = Double.parseDouble(salaryText); // Convert string to double
-            System.out.println("Salary Set: " + salary + "$");
-
-            // Optionally: assign to a staff object or label
-            // staff.setSalary(salary);
-            // salaryLabel.setText("Salary: " + salary);
-
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid numeric salary.");
-            JOptionPane.showMessageDialog(null, "Please enter a valid number for salary.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void setWeeklyHours() {
-        try {
-            String weeklyFractionalHoursText = weeklyFractionalHoursField.getText();
-            int weeklyHours = Integer.parseInt(weeklyFractionalHoursText);
-            System.out.println("Weekly Fractional Hours: " + weeklyHours + " Hours");
-
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid value for hours.");
-            JOptionPane.showMessageDialog(null, "Please enter a valid number for hours.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void setWagesPerHour() {
-        try {
-            String wagesText = wagesPerHourField.getText();
-            double wages = Double.parseDouble(wagesText);
-            System.out.println("Wages per hour set to: " + wages + "$");
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid number for wages per hour.");
-            JOptionPane.showMessageDialog(null, "Please enter a valid number for wages per hour.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-
-    public void terminatePartTimeStaff()
-    {
-    int arrayNumber = getDisplayNumber();
-    String name = staffNameField.getText();
-
-    if ( arrayNumber >= Staff.size() || arrayNumber < 0 )
-    {
-    JOptionPane.showMessageDialog(frame, "Please enter a a valid number from the staff array.");
-    }
-    else
-    {
-    StaffHire aStaff = Staff.get(arrayNumber);
-
-    if (aStaff instanceof PartTimeStaffHire) {
-    PartTimeStaffHire aPartTimeStaff = (PartTimeStaffHire) aStaff;
-    aPartTimeStaff.workTerminate(name);
-    }
-    }
-    }
-
-    public void storeStaff(){
-      staffHire.add(new StaffHire( vacancyNumber, designation, jobType, staffName,
-             joiningDate, qualification, appointedBy, joined));
-    }
-
-    public void listStaff()
-    {
-    int index = 1;
-    for(StaffHire s : staffHire)
-    {
-    System.out.println(index + ": " + s.getVacancyNumber() +
-    "\n" + s.getDesignation() + "\n" + s.getJobType());
-    index++;
-    }
     }
 
     private void clearFields() {
@@ -393,21 +247,74 @@ public  class GUI3 implements ActionListener {
         appointedByField.setText("");
         salaryField.setText("");
         weeklyFractionalHoursField.setText("");
-        workingHourField.setText("");
         wagesPerHourField.setText("");
         shiftsField.setText("");
+        workingHourField.setText("");
         terminatedField.setText("");
+        displayNumberField.setText("");
         joinedCheckBox.setSelected(false);
     }
-}
-    private void setShifts() {
+
+    private void setSalary() {
         try {
-            String shiftsText = shiftsField.getText();
-            int shifts = Integer.parseInt(shiftsText);
-            System.out.println("Shifts set to: " + shifts);
+            double salary = Double.parseDouble(salaryField.getText());
+            System.out.println("Salary set: " + salary);
+            // staffList logic here.
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid number for shifts.");
-            JOptionPane.showMessageDialog(null, "Please enter a valid number for shifts.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Please enter a valid number for salary.", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    private void setWeeklyHours() {
+        try {
+            int weeklyHours = Integer.parseInt(weeklyFractionalHoursField.getText());
+            System.out.println("Weekly Hours set: " + weeklyHours);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid number for weekly hours.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void addFullTimeStaff() {
+        // Placeholder: implement your object creation here.
+        System.out.println("Full Time Staff added!");
+    }
+
+    private void setWorkingHours() {
+        try {
+            int hours = Integer.parseInt(workingHourField.getText());
+            System.out.println("Working Hours set: " + hours);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Please enter valid working hours.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void setWagesPerHour() {
+        try {
+            double wage = Double.parseDouble(wagesPerHourField.getText());
+            System.out.println("Wage Per Hour set: " + wage);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid wage.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void setShifts() {
+        try {
+            int shifts = Integer.parseInt(shiftsField.getText());
+            System.out.println("Shifts set to: " + shifts);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid number for shifts.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void terminatePartTimeStaff() {
+        System.out.println("Terminated part-time staff logic here.");
+    }
+
+    private void addPartTimeStaff() {
+        System.out.println("Part Time Staff added!");
+    }
+
+    private void displayStaffDetails() {
+        System.out.println("Displaying staff details...");
+    }
+}
