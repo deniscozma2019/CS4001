@@ -1,53 +1,95 @@
 public class PartTimeStaffHire extends StaffHire {
     private int workingHour;
-    private double wagesPerHour;
+    private int wagesPerHour;
     private String shifts;
+    private String staffName;
+    private String joiningDate;
+    private String qualification;
+    private String appointedBy;
+    private boolean joined;
     private boolean terminated;
 
-    public PartTimeStaffHire(int vacancyNumber, String designation, String jobType, String staffName, String joiningDate, String qualification, String appointedBy, boolean joined, int workingHour, double wagesPerHour, String shifts) {
-        super(vacancyNumber, designation, jobType, staffName, joiningDate, qualification, appointedBy, joined);
+    public PartTimeStaffHire(int vacancyNumber, String designation, String jobType, int workingHour, int wagesPerHour, String shifts) {
+        super(vacancyNumber, designation, jobType);
         this.workingHour = workingHour;
         this.wagesPerHour = wagesPerHour;
         this.shifts = shifts;
+        this.joined = false;
         this.terminated = false;
     }
 
-    public int getWorkingHour() { return workingHour; }
-    public double getWagesPerHour() { return wagesPerHour; }
-    public String getShifts() { return shifts; }
-    public boolean getTerminated() { return terminated; }
-
-    public void setShifts(String shifts) {
-        if (getJoined()) {
-            this.shifts = shifts;
+    public void hirePartTimeStaff(String staffName, String joiningDate, String qualification, String appointedBy) {
+        if (!joined) {
+            this.staffName = staffName;
+            this.joiningDate = joiningDate;
+            this.qualification = qualification;
+            this.appointedBy = appointedBy;
+            this.joined = true;
+            this.terminated = false;
         } else {
-            System.out.println("Staff has not joined yet.");
+            System.out.println("Staff already hired.");
         }
     }
 
     public void terminateStaff() {
-        if (terminated) {
-            System.out.println("Staff is already terminated.");
-        } else {
-            setStaffName("");
-            setJoiningDate("");
-            setQualification("");
-            setAppointedBy("");
-            setJoined(false);
+        if (!terminated) {
+            this.staffName = "";
+            this.joiningDate = "";
+            this.qualification = "";
+            this.appointedBy = "";
+            joined = false;
             terminated = true;
-            System.out.println("Staff terminated successfully.");
+        } else {
+            System.out.println("Already terminated.");
         }
     }
+
+    // în PartTimeStaffHire.java
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public String getJoiningDate() {
+        return joiningDate;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public String getAppointedBy() {
+        return appointedBy;
+    }
+
+    public boolean isTerminated() {
+        return terminated;
+    }
+
 
     @Override
     public void display() {
         super.display();
-        if (getWorkingHour() > 0) {
-            System.out.println("Working Hour: " + workingHour);
-            System.out.println("Wages Per Hour: " + wagesPerHour);
-            System.out.println("Shifts: " + shifts);
-            System.out.println("Terminated: " + terminated);
-            System.out.println("Income Per Day: " + (workingHour * wagesPerHour));
+        System.out.println("Working Hour: " + workingHour);
+        System.out.println("Wages Per Hour: " + wagesPerHour);
+        System.out.println("Shift: " + shifts);
+        if (joined) {
+            System.out.println("Staff Name: " + staffName);
+            System.out.println("Joining Date: " + joiningDate);
+            System.out.println("Qualification: " + qualification);
+            System.out.println("Appointed By: " + appointedBy);
         }
+    }
+
+    public boolean isJoined() {
+        return joined;
+    }
+
+    public String getWagesPerHour() {
+        return String.valueOf(wagesPerHour);
+    }
+
+    public String getShifts() {
+        return shifts;
     }
 }
